@@ -83,7 +83,7 @@ module "windows2019_instances" {
 
   name                   = "win19-dev-workstation-${random_id.instance_id.hex}"
   instance_count         = var.winserver2019_instance_count
-  ami                    = "ami-0d4e8c2c7b354953e"
+  ami                    = var.workstation_ami
   instance_type          = var.winserver2019_instance_type
   vpc_security_group_ids = [module.vpc.default_security_group_id, module.windows_sg.security_group_id]
   subnet_id              = module.vpc.public_subnets[0]

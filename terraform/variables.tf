@@ -80,3 +80,7 @@ variable "windows_admin_password" {
 variable "ami_owner_id" {
   description = "Owner ID for Packer Base Image"  
 }
+
+variable "workstation_ami" {
+  description = "ami id from packer build" 
+}

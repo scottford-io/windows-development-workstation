@@ -1,18 +1,18 @@
 # Windows Development Workstation
-This project provides automation code for building a Windows 2019 Developer Workstation in AWS using [Packer]() and [Terraform]().
+This project provides automation code for building a Windows 2019/2022 Developer Workstation in AWS using [Packer](https://www.packer.io/) and [Terraform](https://www.terraform.io/).
 
-### Packer Overview
-Packer builds a base ami off of the latest Windows 2019 Server image from the Amazon Marketplace. During the build process, Packer installs the following dev tools:
+## Installed Software
+Both Packer templates build the AMI from the latest versions of Windows 2019 and 2022 which are maintained by Amazon on the Amazon Marketplace. During the build process, Packer installs the following dev tools:
 
-- Chocolatey
-- VSCode
-- Go
-- Python3
-- Google Chrome
-- Firefox 
-- Git
+- [Chocolatey](https://chocolatey.org/) - Package Manager for Windows
+- [Microsoft Visual Studio Code](https://code.visualstudio.com/) - Open source code editor from Microsoft.
+- [GoLang](https://go.dev/) - Go is an open source programming language supported by Google.
+- [Python3](https://www.python.org/) - Python 3 programming language.
+- [Google Chrome](https://www.google.com/chrome/downloads/) - Google Chrome Web Browser.
+- [Firefox](https://www.mozilla.org/en-US/firefox/new/) - Firefox browser.
+- [Git](https://git-scm.com/) - Free and open source distributed version control system.
 
-### Requirements
+## Requirements
 In order use this code with your own environment you will need the following installed on your workstation:
 
 - Packer 
@@ -24,18 +24,16 @@ In order use this code with your own environment you will need the following ins
 By default the packer template builds using the `default` profile from the aws credentials file, and will provision in `us-east-1`, but both of these variables can be overridden.
 ```
 cd packer
-packer build win2019-dev-workstation.json
-...
-...
-==> amazon-ebs: Creating snapshot tags
-==> amazon-ebs: Terminating the source AWS instance...
-==> amazon-ebs: Cleaning up any extra volumes...
-==> amazon-ebs: No volumes to clean up, skipping
-==> amazon-ebs: Deleting temporary security group...
-==> amazon-ebs: Deleting temporary keypair...
-Build 'amazon-ebs' finished after 20 minutes 16 seconds.
+packer build aws-windows2019.pkr.hcl
+amazon-ebs.windows2019: output will be in this color.
 
-==> Wait completed after 20 minutes 16 seconds
+==> amazon-ebs.windows2019: Prevalidating any provided VPC information
+==> amazon-ebs.windows2019: Prevalidating AMI Name: windows2019-dev-workstation-20220731223804
+    amazon-ebs.windows2019: Found Image ID: ami-05912b6333beaa478
+==> amazon-ebs.windows2019: Creating temporary keypair: packer_62e7044c-e50e-c9ad-01ea-b2c80060c68e
+==> amazon-ebs.windows2019: Creating temporary security group for this instance: packer_62e70452-0b4b-14a5-7b6f-c0f683e8627f
+==> amazon-ebs.windows2019: Authorizing access to port 5985 from [0.0.0.0/0] in the temporary security groups...
+==> amazon-ebs.windows2019: Launching a source AWS instance...==> Wait completed after 20 minutes 16 seconds
 
 ==> Builds finished. The artifacts of successful builds are:
 --> amazon-ebs: AMIs were created:

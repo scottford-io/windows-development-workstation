@@ -65,12 +65,8 @@ variable "ec2_tags" {
   }
 }
 
-variable "winserver2019_instance_type" {
+variable "instance_type" {
   default = "t2.medium"
-}
-
-variable "winserver2019_instance_count" {
-  default = "0"
 }
 
 variable "windows_admin_password" {
@@ -79,8 +75,4 @@ variable "windows_admin_password" {
 
 variable "ami_owner_id" {
   description = "Owner ID for Packer Base Image"  
-}
-
-variable "workstation_ami" {
-  description = "ami id from packer build" 
 }

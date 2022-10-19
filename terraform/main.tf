@@ -12,7 +12,7 @@ resource "random_id" "instance_id" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.2"
+  version = "~> 3.16"
 
   name = var.vpc_name
   cidr = var.vpc_cidr
@@ -29,10 +29,10 @@ module "vpc" {
 
 module "windows_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 4.3"
+  version = "~> 4.13"
 
-  name        = "cloudplayground-windows-sg"
-  description = "Security group for cloudplayground windows instances"
+  name        = "windows-workstations"
+  description = "Security group for windows workstation instances"
   vpc_id      = module.vpc.vpc_id
 
   ingress_with_cidr_blocks = [
@@ -77,14 +77,13 @@ data "template_file" "winrm_user_data" {
 ////////////////////////////////
 // Windows Server Instances
 
-module "windows2019_instances" {
+module "windows2022_instances" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 2.19"
+  version = "~> 4.1"
 
-  name                   = "win19-dev-workstation-${random_id.instance_id.hex}"
-  instance_count         = var.winserver2019_instance_count
-  ami                    = var.workstation_ami
-  instance_type          = var.winserver2019_instance_type
+  name                   = "win22-dev-workstation-${random_id.instance_id.hex}"
+  ami                    = data.aws_ami.win2022_dev_workstation.id
+  instance_type          = var.instance_type
   vpc_security_group_ids = [module.vpc.default_security_group_id, module.windows_sg.security_group_id]
   subnet_id              = module.vpc.public_subnets[0]
   key_name               = var.aws_key_pair_name

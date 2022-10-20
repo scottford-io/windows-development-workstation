@@ -5,6 +5,7 @@ This project provides automation code for building a Windows 2019/2022 Developer
 Both Packer templates build the AMI from the latest versions of Windows 2019 and 2022 which are maintained by Amazon on the Amazon Marketplace. During the build process, Packer installs the following dev tools:
 
 - [Chocolatey](https://chocolatey.org/) - Package Manager for Windows
+- [openssh](https://community.chocolatey.org/packages/openssh) - Win32 OpenSSH
 - [Microsoft Visual Studio Code](https://code.visualstudio.com/) - Open source code editor from Microsoft.
 - [GoLang](https://go.dev/) - Go is an open source programming language supported by Google.
 - [Python3](https://www.python.org/) - Python 3 programming language.

@@ -12,3 +12,5 @@ choco install python3
 choco install googlechrome
 choco install firefox
 choco install git
+choco install terraform
+choco install packer

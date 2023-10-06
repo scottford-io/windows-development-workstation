@@ -1,11 +1,7 @@
 ////////////////////////////////
 // AWS Connection
 
-variable "aws_profile" {
-  default = "default"
-}
-
-variable "aws_region" {
+variable "region" {
   default = "us-east-1"
 }
 
@@ -26,11 +22,11 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
-# variable "vpc_private_subnets" {
-#   description = "Private subnets for VPC"
-#   type        = list(string)
-#   default     = ["10.0.1.0/24", "10.0.2.0/24"]
-# }
+variable "vpc_private_subnets" {
+  description = "Private subnets for VPC"
+  type        = list(string)
+  default     = ["10.0.1.0/24", "10.0.2.0/24"]
+}
 
 variable "vpc_public_subnets" {
   description = "Public subnets for VPC"
@@ -53,6 +49,9 @@ variable "vpc_tags" {
   }
 }
 
+variable "myIp" {
+  description = "IP address to allow RDP and SSH access to Windows workstation. Example: 24.68.12.145/32"
+}
 ////////////////////////////////
 // EC2 Settings
 
@@ -70,9 +69,9 @@ variable "instance_type" {
 }
 
 variable "windows_admin_password" {
-  default = "cloudplayground1" 
+  default = "C10udp1@gr0und2023"
 }
 
 variable "ami_owner_id" {
-  description = "Owner ID for Packer Base Image"  
+  description = "Owner ID for Packer Base Image"
 }

@@ -37,3 +37,9 @@ override.tf.json
 # example: *tfplan*
 
 .DS_Store
+
+# Terraform plan files
+tfplan.out
+tfplan.json
+plan.out
+plan.json

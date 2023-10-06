@@ -12,6 +12,10 @@ Both Packer templates build the AMI from the latest versions of Windows 2019 and
 - [Google Chrome](https://www.google.com/chrome/downloads/) - Google Chrome Web Browser.
 - [Firefox](https://www.mozilla.org/en-US/firefox/new/) - Firefox browser.
 - [Git](https://git-scm.com/) - Free and open source distributed version control system.
+- [PowerShell 7](https://git-scm.com/) - Free and open source distributed version control system.
+- [sshd](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_overview) - sshd for Windows.
+- [Terraform](https://www.terraform.io/) - HashiCorp Terraform.
+- [Packer](https://www.packer.io/) - HashiCorp Packer.
 
 ## Requirements
 In order use this code with your own environment you will need the following installed on your workstation:
@@ -54,3 +58,16 @@ terraform apply -auto-approve
 ```
 
 Once complete, Terraform will print out the `public_ip` of the Windows instance and you can RDP to it.
+
+### Windows Admin Password
+
+The AMI is provisioned with the default password `C10udp1@gr0und2023`. This can be override, but the password must meet Windows 2022 default password complexity requirements:
+
+- Uppercase letters of European languages (A through Z, with diacritic marks, Greek and Cyrillic characters).
+- Lowercase letters of European languages (a through z, sharp-s, with diacritic marks, Greek and Cyrillic characters).
+- Base 10 digits (0 through 9).
+- Non-alphanumeric characters (special characters):
+
+  ```
+  '-!"#$%&()*,./:;?@[]^_`{|}~+<=>
+  ```

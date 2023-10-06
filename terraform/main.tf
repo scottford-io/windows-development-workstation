@@ -1,6 +1,5 @@
 provider "aws" {
-  region  = var.aws_region
-  profile = var.aws_profile
+  region = var.region
 }
 
 resource "random_id" "instance_id" {
@@ -11,25 +10,23 @@ resource "random_id" "instance_id" {
 // VPC Configuration
 
 module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.16"
+  source = "terraform-aws-modules/vpc/aws"
 
   name = var.vpc_name
   cidr = var.vpc_cidr
 
-  azs                = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"]
+  azs                = ["${var.region}a", "${var.region}b", "${var.region}c"]
   public_subnets     = var.vpc_public_subnets
+  private_subnets    = var.vpc_private_subnets
   enable_nat_gateway = var.vpc_enable_nat_gateway
-
-  tags = var.vpc_tags
 }
+
 
 ////////////////////////////////
 // Windows Security Groups
 
 module "windows_sg" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 4.13"
+  source = "terraform-aws-modules/security-group/aws"
 
   name        = "windows-workstations"
   description = "Security group for windows workstation instances"
@@ -37,18 +34,25 @@ module "windows_sg" {
 
   ingress_with_cidr_blocks = [
     {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      description = "SSH ports"
+      cidr_blocks = var.myIp
+    },
+    {
       from_port   = 5985
       to_port     = 5986
       protocol    = "tcp"
       description = "Winrm ports"
-      cidr_blocks = "0.0.0.0/0"
+      cidr_blocks = var.myIp
     },
     {
       from_port   = 3389
       to_port     = 3389
       protocol    = "tcp"
       description = "Remote Desktop ports"
-      cidr_blocks = "0.0.0.0/0"
+      cidr_blocks = var.myIp
     }
   ]
 
@@ -66,10 +70,10 @@ module "windows_sg" {
 // Windows WinRM Bootstrap Template
 
 data "template_file" "winrm_user_data" {
-  template = "${file("${path.module}/templates/win_bootstrap.tpl")}"
+  template = file("${path.module}/templates/win_bootstrap.tpl")
 
   vars = {
-    admin_password = "${var.windows_admin_password}"
+    admin_password = var.windows_admin_password
   }
 }
 
@@ -108,17 +112,21 @@ EOF
 // Windows Server Instances
 
 module "windows2022_instances" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 4.1"
+  source = "terraform-aws-modules/ec2-instance/aws"
 
-  name                   = "win22-dev-workstation-${random_id.instance_id.hex}"
-  ami                    = data.aws_ami.win2022_dev_workstation.id
-  instance_type          = var.instance_type
-  iam_instance_profile   = aws_iam_instance_profile.ssm_instance_profile.name
-  vpc_security_group_ids = [module.vpc.default_security_group_id, module.windows_sg.security_group_id]
-  subnet_id              = module.vpc.public_subnets[0]
-  key_name               = var.aws_key_pair_name
-  user_data              = data.template_file.winrm_user_data.rendered
+  name                        = "win22-dev-workstation-${random_id.instance_id.hex}"
+  ami                         = data.aws_ami.win2022_dev_workstation.id
+  instance_type               = var.instance_type
+  iam_instance_profile        = aws_iam_instance_profile.ssm_instance_profile.name
+  vpc_security_group_ids      = [module.windows_sg.security_group_id]
+  subnet_id                   = module.vpc.public_subnets[0]
+  key_name                    = var.aws_key_pair_name
+  user_data                   = data.template_file.winrm_user_data.rendered
+  associate_public_ip_address = true
+  metadata_options = {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
 
   tags = var.ec2_tags
 }

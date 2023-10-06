@@ -5,7 +5,7 @@ variable "aws_region" {
 
 data "amazon-ami" "windows2022" {
   filters = {
-    name                = "Windows_Server-2022-English-Full-Base-2022*"
+    name                = "Windows_Server-2022-English-Full-Base-2023*"
     root-device-type    = "ebs"
     virtualization-type = "hvm"
   }
@@ -45,6 +45,8 @@ build {
   provisioner "powershell" {
     scripts = [
       "./scripts/disable-uac.ps1",
+      "./scripts/enable-sshd.ps1",
+      "./scripts/install-powershell7.ps1",
       "./scripts/choco.ps1"
     ]
   }
